@@ -1,8 +1,8 @@
 package com.abhi.parkspace.auth.controller;
 
-import com.abhi.parkspace.auth.dto.request.LoginRequest;
-import com.abhi.parkspace.auth.dto.request.RegisterRequest;
-import com.abhi.parkspace.auth.dto.response.AuthResponse;
+import com.abhi.parkspace.auth.dto.LoginRequest;
+import com.abhi.parkspace.auth.dto.RegisterRequest;
+import com.abhi.parkspace.auth.dto.AuthResponse;
 import com.abhi.parkspace.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

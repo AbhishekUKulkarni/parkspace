@@ -4,6 +4,7 @@ import com.abhi.parkspace.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.net.ssl.SSLSession;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -37,7 +38,7 @@ public class Vehicle {
     private String color;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
     @Column(nullable = false)
@@ -49,7 +50,6 @@ public class Vehicle {
 
     @PrePersist
     public void prePersist() {
-
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
 
@@ -60,7 +60,7 @@ public class Vehicle {
 
     @PreUpdate
     public void preUpdate() {
-
         updatedAt = LocalDateTime.now();
     }
+
 }

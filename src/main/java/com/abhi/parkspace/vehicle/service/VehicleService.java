@@ -1,8 +1,8 @@
 package com.abhi.parkspace.vehicle.service;
 
 import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.vehicle.dto.request.VehicleRequest;
-import com.abhi.parkspace.vehicle.dto.response.VehicleResponse;
+import com.abhi.parkspace.vehicle.dto.VehicleRequest;
+import com.abhi.parkspace.vehicle.dto.VehicleResponse;
 
 import java.util.List;
 import java.util.UUID;

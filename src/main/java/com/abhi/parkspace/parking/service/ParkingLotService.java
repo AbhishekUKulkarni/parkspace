@@ -1,41 +1,23 @@
 package com.abhi.parkspace.parking.service;
 
 import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.parking.dto.request.ParkingLotRequest;
-import com.abhi.parkspace.parking.dto.response.ParkingLotResponse;
+import com.abhi.parkspace.parking.dto.ParkingLotRequest;
+import com.abhi.parkspace.parking.dto.ParkingLotResponse;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ParkingLotService {
 
-    ParkingLotResponse createParkingLot(
-            ParkingLotRequest request,
-            User admin
-    );
+    ParkingLotResponse create(ParkingLotRequest request, User admin);
 
-    List<ParkingLotResponse> getAllParkingLots();
+    List<ParkingLotResponse> getAll();
 
-    ParkingLotResponse getParkingLotById(
-            UUID parkingLotId
-    );
+    ParkingLotResponse getById(UUID lotId);
 
-    List<ParkingLotResponse> getParkingLotsByCity(
-            String city
-    );
+    List<ParkingLotResponse> getMyLots(User admin);
 
-    List<ParkingLotResponse> getAdminParkingLots(
-            User admin
-    );
+    ParkingLotResponse update(UUID lotId, ParkingLotRequest request, User admin);
 
-    ParkingLotResponse updateParkingLot(
-            UUID parkingLotId,
-            ParkingLotRequest request,
-            User admin
-    );
-
-    void deleteParkingLot(
-            UUID parkingLotId,
-            User admin
-    );
+    void delete(UUID lotId, User admin);
 }

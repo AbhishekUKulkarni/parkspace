@@ -1,8 +1,8 @@
 package com.abhi.parkspace.vehicle.service.impl;
 
 import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.vehicle.dto.request.VehicleRequest;
-import com.abhi.parkspace.vehicle.dto.response.VehicleResponse;
+import com.abhi.parkspace.vehicle.dto.VehicleRequest;
+import com.abhi.parkspace.vehicle.dto.VehicleResponse;
 import com.abhi.parkspace.vehicle.entity.Vehicle;
 import com.abhi.parkspace.vehicle.exception.VehicleAlreadyExistsException;
 import com.abhi.parkspace.vehicle.exception.VehicleNotFoundException;
@@ -23,8 +23,7 @@ import java.util.UUID;
 public class VehicleServiceImpl
         implements VehicleService {
 
-    private final VehicleRepository
-            vehicleRepository;
+    private final VehicleRepository vehicleRepository;
 
     @Override
     public VehicleResponse createVehicle(
@@ -33,21 +32,12 @@ public class VehicleServiceImpl
     ) {
 
         String normalizedVehicleNumber =
-                normalizeVehicleNumber(
-                        request.vehicleNumber()
-                );
+                normalizeVehicleNumber(request.vehicleNumber());
 
-        validateVehicleDoesNotExist(
-                normalizedVehicleNumber
-        );
-
+        validateVehicleDoesNotExist(normalizedVehicleNumber);
         Vehicle vehicle = Vehicle.builder()
-                .vehicleNumber(
-                        normalizedVehicleNumber
-                )
-                .vehicleType(
-                        request.vehicleType()
-                )
+                .vehicleNumber(normalizedVehicleNumber)
+                .vehicleType(request.vehicleType())
                 .brand(request.brand())
                 .model(request.model())
                 .color(request.color())
@@ -164,11 +154,6 @@ public class VehicleServiceImpl
                         user
                 );
 
-        /*
-         =====================================
-                 SOFT DELETE
-         =====================================
-         */
 
         vehicle.setActive(false);
 
@@ -180,22 +165,13 @@ public class VehicleServiceImpl
         );
     }
 
-    /*
-     =========================================
-                HELPER METHODS
-     =========================================
-     */
 
     private Vehicle getVehicle(
             UUID vehicleId,
             User user
     ) {
 
-        return vehicleRepository
-                .findByIdAndOwner(
-                        vehicleId,
-                        user
-                )
+        return vehicleRepository.findByIdAndOwner(vehicleId, user)
                 .orElseThrow(() ->
                         new VehicleNotFoundException(
                                 "Vehicle not found"
@@ -204,19 +180,9 @@ public class VehicleServiceImpl
     }
 
     private void validateVehicleDoesNotExist(
-            String vehicleNumber
-    ) {
-
-        if (
-                vehicleRepository
-                        .existsByVehicleNumber(
-                                vehicleNumber
-                        )
-        ) {
-
-            throw new VehicleAlreadyExistsException(
-                    "Vehicle number already exists"
-            );
+            String vehicleNumber) {
+        if (vehicleRepository.existsByVehicleNumber(vehicleNumber)) {
+            throw new VehicleAlreadyExistsException("Vehicle number already exists");
         }
     }
 

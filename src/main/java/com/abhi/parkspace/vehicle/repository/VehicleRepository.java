@@ -17,6 +17,5 @@ public interface VehicleRepository
             UUID id,
             User owner
     );
-
-    boolean existsByVehicleNumber(String vehicleNumber);
+   boolean existsByVehicleNumber(String vehicleNumber);
 }

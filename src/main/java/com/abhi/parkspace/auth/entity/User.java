@@ -1,15 +1,13 @@
 package com.abhi.parkspace.auth.entity;
 
-import com.abhi.parkspace.auth.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(
@@ -45,31 +43,22 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
-
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
+
 
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDateTime.now();
+        this.createdAt = Instant.now();
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        return List.of(
-                new SimpleGrantedAuthority(
-                        "ROLE_" + role.name()
-                )
-        );
+        return List.of();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override

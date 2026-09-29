@@ -1,4 +1,4 @@
-package com.abhi.parkspace.vehicle.dto.request;
+package com.abhi.parkspace.vehicle.dto;
 
 import com.abhi.parkspace.vehicle.entity.VehicleType;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ public record VehicleRequest(
 
         @Pattern(
                 regexp =
-                        "^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$",
+                        "^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$",// KA01AB1289
 
                 message =
                         "Invalid Indian vehicle registration number"

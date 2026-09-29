@@ -1,37 +1,19 @@
 package com.abhi.parkspace.booking.service;
 
 import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.booking.dto.request.CreateBookingRequest;
-import com.abhi.parkspace.booking.dto.request.UpdateBookingStatusRequest;
-import com.abhi.parkspace.booking.dto.response.BookingResponse;
+import com.abhi.parkspace.booking.dto.BookingRequest;
+import com.abhi.parkspace.booking.dto.BookingResponse;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface BookingService {
 
-    BookingResponse createBooking(
-            CreateBookingRequest request,
-            User user
-    );
+    BookingResponse createBooking(BookingRequest request, User user);
 
-    List<BookingResponse> getUserBookings(
-            User user
-    );
+    void endBooking(UUID bookingId, User user);
 
-    BookingResponse getBookingById(
-            UUID bookingId,
-            User user
-    );
+    BookingResponse getActiveBooking(UUID vehicleId, User user);
 
-    BookingResponse updateBookingStatus(
-            UUID bookingId,
-            UpdateBookingStatusRequest request,
-            User user
-    );
-
-    void cancelBooking(
-            UUID bookingId,
-            User user
-    );
+    List<BookingResponse> getUserBookings(User user);
 }

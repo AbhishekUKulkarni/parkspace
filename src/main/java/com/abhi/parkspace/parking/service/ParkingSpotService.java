@@ -1,54 +1,18 @@
 package com.abhi.parkspace.parking.service;
 
-import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.parking.dto.request.ParkingSpotRequest;
-import com.abhi.parkspace.parking.dto.response.ParkingSpotResponse;
-import com.abhi.parkspace.parking.enums.ParkingSpotStatus;
-import com.abhi.parkspace.parking.enums.ParkingSpotType;
+import com.abhi.parkspace.parking.dto.ParkingSpotRequest;
+import com.abhi.parkspace.parking.dto.ParkingSpotResponse;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ParkingSpotService {
 
-    ParkingSpotResponse createParkingSpot(
-            UUID parkingLotId,
-            UUID floorId,
-            ParkingSpotRequest request,
-            User admin
-    );
+    ParkingSpotResponse create(UUID lotId, ParkingSpotRequest request);
 
-    List<ParkingSpotResponse> getFloorParkingSpots(
-            UUID parkingLotId,
-            UUID floorId
-    );
+    List<ParkingSpotResponse> getByLot(UUID lotId);
 
-    ParkingSpotResponse getParkingSpotById(
-            UUID parkingLotId,
-            UUID floorId,
-            UUID spotId
-    );
+    ParkingSpotResponse update(UUID spotId, ParkingSpotRequest request);
 
-    List<ParkingSpotResponse> getParkingSpotsByStatus(
-            ParkingSpotStatus status
-    );
-
-    List<ParkingSpotResponse> getParkingSpotsByType(
-            ParkingSpotType type
-    );
-
-    ParkingSpotResponse updateParkingSpot(
-            UUID parkingLotId,
-            UUID floorId,
-            UUID spotId,
-            ParkingSpotRequest request,
-            User admin
-    );
-
-    void deleteParkingSpot(
-            UUID parkingLotId,
-            UUID floorId,
-            UUID spotId,
-            User admin
-    );
+    void delete(UUID spotId);
 }

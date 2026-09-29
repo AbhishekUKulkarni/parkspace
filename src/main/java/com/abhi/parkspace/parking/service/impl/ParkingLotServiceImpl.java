@@ -1,263 +1,100 @@
 package com.abhi.parkspace.parking.service.impl;
 
 import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.parking.dto.request.ParkingLotRequest;
-import com.abhi.parkspace.parking.dto.response.ParkingLotResponse;
+import com.abhi.parkspace.parking.dto.ParkingLotRequest;
+import com.abhi.parkspace.parking.dto.ParkingLotResponse;
 import com.abhi.parkspace.parking.entity.ParkingLot;
-import com.abhi.parkspace.parking.exception.ParkingAccessDeniedException;
-import com.abhi.parkspace.parking.exception.ParkingLotAlreadyExistsException;
-import com.abhi.parkspace.parking.exception.ParkingLotNotFoundException;
 import com.abhi.parkspace.parking.repository.ParkingLotRepository;
 import com.abhi.parkspace.parking.service.ParkingLotService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-@Slf4j
-public class ParkingLotServiceImpl
-        implements ParkingLotService {
+public class ParkingLotServiceImpl implements ParkingLotService {
 
-    private final ParkingLotRepository
-            parkingLotRepository;
+    private final ParkingLotRepository repo;
 
     @Override
-    public ParkingLotResponse createParkingLot(
-            ParkingLotRequest request,
-            User admin
-    ) {
+    public ParkingLotResponse create(ParkingLotRequest request, User admin) {
 
-        validateParkingLotDoesNotExist(
-                request.name(),
-                request.address()
-        );
-
-        ParkingLot parkingLot = ParkingLot.builder()
+        ParkingLot lot = ParkingLot.builder()
                 .name(request.name())
                 .address(request.address())
-                .city(request.city())
-                .state(request.state())
-                .pincode(request.pincode())
-                .latitude(request.latitude())
-                .longitude(request.longitude())
-                .totalFloors(request.totalFloors())
-                .status(request.status())
-                .active(true)
                 .admin(admin)
+                .active(true)
                 .build();
 
-        ParkingLot savedParkingLot =
-                parkingLotRepository.save(
-                        parkingLot
-                );
-
-        log.info(
-                "Parking lot created: {}",
-                savedParkingLot.getName()
-        );
-
-        return mapToResponse(savedParkingLot);
+        return map(repo.save(lot));
     }
 
     @Override
-    public List<ParkingLotResponse>
-    getAllParkingLots() {
-
-        return parkingLotRepository
-                .findByActiveTrue()
+    public List<ParkingLotResponse> getAll() {
+        return repo.findByActiveTrue()
                 .stream()
-                .map(this::mapToResponse)
+                .map(this::map)
                 .toList();
     }
 
     @Override
-    public ParkingLotResponse getParkingLotById(
-            UUID parkingLotId
-    ) {
+    public ParkingLotResponse getById(UUID lotId) {
 
-        ParkingLot parkingLot =
-                getParkingLot(parkingLotId);
+        ParkingLot lot = repo.findById(lotId)
+                .orElseThrow(() -> new RuntimeException("Lot not found"));
 
-        return mapToResponse(parkingLot);
+        return map(lot);
     }
 
     @Override
-    public List<ParkingLotResponse>
-    getParkingLotsByCity(
-            String city
-    ) {
+    public List<ParkingLotResponse> getMyLots(User admin) {
 
-        return parkingLotRepository
-                .findByCityIgnoreCase(city)
+        return repo.findByAdmin(admin)
                 .stream()
-                .map(this::mapToResponse)
+                .map(this::map)
                 .toList();
     }
 
     @Override
-    public List<ParkingLotResponse>
-    getAdminParkingLots(
-            User admin
-    ) {
+    public ParkingLotResponse update(UUID lotId, ParkingLotRequest request, User admin) {
 
-        return parkingLotRepository
-                .findByAdmin(admin)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
+        ParkingLot lot = repo.findById(lotId)
+                .orElseThrow(() -> new RuntimeException("Lot not found"));
 
-    @Override
-    public ParkingLotResponse updateParkingLot(
-            UUID parkingLotId,
-            ParkingLotRequest request,
-            User admin
-    ) {
-
-        ParkingLot parkingLot =
-                getParkingLot(parkingLotId);
-
-        validateAdminOwnership(
-                parkingLot,
-                admin
-        );
-
-        parkingLot.setName(request.name());
-        parkingLot.setAddress(request.address());
-        parkingLot.setCity(request.city());
-        parkingLot.setState(request.state());
-        parkingLot.setPincode(request.pincode());
-        parkingLot.setLatitude(request.latitude());
-        parkingLot.setLongitude(request.longitude());
-        parkingLot.setTotalFloors(
-                request.totalFloors()
-        );
-        parkingLot.setStatus(
-                request.status()
-        );
-
-        ParkingLot updatedParkingLot =
-                parkingLotRepository.save(
-                        parkingLot
-                );
-
-        log.info(
-                "Parking lot updated: {}",
-                updatedParkingLot.getName()
-        );
-
-        return mapToResponse(updatedParkingLot);
-    }
-
-    @Override
-    public void deleteParkingLot(
-            UUID parkingLotId,
-            User admin
-    ) {
-
-        ParkingLot parkingLot =
-                getParkingLot(parkingLotId);
-
-        validateAdminOwnership(
-                parkingLot,
-                admin
-        );
-
-        /*
-         =====================================
-                 SOFT DELETE
-         =====================================
-         */
-
-        parkingLot.setActive(false);
-
-        parkingLotRepository.save(parkingLot);
-
-        log.info(
-                "Parking lot deleted: {}",
-                parkingLot.getName()
-        );
-    }
-
-    /*
-     =========================================
-                HELPER METHODS
-     =========================================
-     */
-
-    private ParkingLot getParkingLot(
-            UUID parkingLotId
-    ) {
-
-        return parkingLotRepository.findById(
-                parkingLotId
-        ).orElseThrow(() ->
-                new ParkingLotNotFoundException(
-                        "Parking lot not found"
-                )
-        );
-    }
-
-    private void validateParkingLotDoesNotExist(
-            String name,
-            String address
-    ) {
-
-        if (
-                parkingLotRepository
-                        .existsByNameAndAddress(
-                                name,
-                                address
-                        )
-        ) {
-
-            throw new ParkingLotAlreadyExistsException(
-                    "Parking lot already exists"
-            );
+        if (!lot.getAdmin().getId().equals(admin.getId())) {
+            throw new RuntimeException("Unauthorized");
         }
+
+        lot.setName(request.name());
+        lot.setAddress(request.address());
+
+        return map(repo.save(lot));
     }
 
-    private void validateAdminOwnership(
-            ParkingLot parkingLot,
-            User admin
-    ) {
+    @Override
+    public void delete(UUID lotId, User admin) {
 
-        if (
-                !parkingLot.getAdmin()
-                        .getId()
-                        .equals(admin.getId())
-        ) {
+        ParkingLot lot = repo.findById(lotId)
+                .orElseThrow(() -> new RuntimeException("Lot not found"));
 
-            throw new ParkingAccessDeniedException(
-                    "You are not authorized for this parking lot"
-            );
+        if (!lot.getAdmin().getId().equals(admin.getId())) {
+            throw new RuntimeException("Unauthorized");
         }
+
+        lot.setActive(false);
+        repo.save(lot);
     }
 
-    private ParkingLotResponse mapToResponse(
-            ParkingLot parkingLot
-    ) {
-
+    private ParkingLotResponse map(ParkingLot lot) {
         return new ParkingLotResponse(
-                parkingLot.getId(),
-                parkingLot.getName(),
-                parkingLot.getAddress(),
-                parkingLot.getCity(),
-                parkingLot.getState(),
-                parkingLot.getPincode(),
-                parkingLot.getLatitude(),
-                parkingLot.getLongitude(),
-                parkingLot.getTotalFloors(),
-                parkingLot.getStatus(),
-                parkingLot.getActive(),
-                parkingLot.getAdmin().getEmail(),
-                parkingLot.getCreatedAt()
+                lot.getId(),
+                lot.getName(),
+                lot.getAddress(),
+                lot.getAdmin().getEmail(),
+                lot.getActive(),
+                lot.getCreatedAt()
         );
     }
 }

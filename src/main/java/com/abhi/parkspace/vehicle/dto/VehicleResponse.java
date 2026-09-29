@@ -1,4 +1,4 @@
-package com.abhi.parkspace.vehicle.dto.response;
+package com.abhi.parkspace.vehicle.dto;
 
 import com.abhi.parkspace.vehicle.entity.VehicleType;
 

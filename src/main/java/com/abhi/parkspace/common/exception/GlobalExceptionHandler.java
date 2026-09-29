@@ -6,8 +6,6 @@ import com.abhi.parkspace.booking.exception.BookingNotFoundException;
 import com.abhi.parkspace.booking.exception.BookingOwnershipException;
 import com.abhi.parkspace.common.response.ApiErrorResponse;
 import com.abhi.parkspace.parking.exception.ParkingSpotUnavailableException;
-import com.abhi.parkspace.payment.exception.PaymentAlreadyExistsException;
-import com.abhi.parkspace.payment.exception.PaymentNotFoundException;
 import com.abhi.parkspace.vehicle.exception.VehicleNotFoundException;
 import com.abhi.parkspace.vehicle.exception.VehicleOwnershipException;
 import org.springframework.http.HttpStatus;
@@ -199,37 +197,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    /*
-     =========================================
-                PAYMENT EXCEPTIONS
-     =========================================
-     */
-
-    @ExceptionHandler(PaymentNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse>
-    handlePaymentNotFoundException(
-            PaymentNotFoundException ex
-    ) {
-
-        return buildErrorResponse(
-                HttpStatus.NOT_FOUND,
-                "PAYMENT_NOT_FOUND",
-                ex.getMessage()
-        );
-    }
-
-    @ExceptionHandler(PaymentAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorResponse>
-    handlePaymentAlreadyExistsException(
-            PaymentAlreadyExistsException ex
-    ) {
-
-        return buildErrorResponse(
-                HttpStatus.CONFLICT,
-                "PAYMENT_ALREADY_EXISTS",
-                ex.getMessage()
-        );
-    }
 
     /*
      =========================================

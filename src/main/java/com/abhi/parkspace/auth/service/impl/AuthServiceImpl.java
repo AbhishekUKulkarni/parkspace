@@ -1,10 +1,9 @@
 package com.abhi.parkspace.auth.service.impl;
 
-import com.abhi.parkspace.auth.dto.request.LoginRequest;
-import com.abhi.parkspace.auth.dto.request.RegisterRequest;
-import com.abhi.parkspace.auth.dto.response.AuthResponse;
+import com.abhi.parkspace.auth.dto.LoginRequest;
+import com.abhi.parkspace.auth.dto.RegisterRequest;
+import com.abhi.parkspace.auth.dto.AuthResponse;
 import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.auth.enums.Role;
 import com.abhi.parkspace.auth.exception.UserAlreadyExistsException;
 import com.abhi.parkspace.auth.repository.UserRepository;
 import com.abhi.parkspace.auth.service.AuthService;
@@ -58,8 +57,7 @@ public class AuthServiceImpl
                                 request.password()
                         )
                 )
-                .role(Role.USER)
-                .build();
+                 .build();
 
         userRepository.save(user);
 
@@ -128,8 +126,7 @@ public class AuthServiceImpl
 
         return new AuthResponse(
                 token,
-                user.getEmail(),
-                user.getRole()
+                user.getEmail()
         );
     }
 }

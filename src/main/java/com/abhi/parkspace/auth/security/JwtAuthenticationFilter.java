@@ -53,7 +53,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         // Extract email from token
-        userEmail = jwtService.extractUsername(jwtToken);
+        try {
+            userEmail = jwtService.extractUsername(jwtToken);
+        } catch (Exception e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // If user is not authenticated yet
         if (userEmail != null

@@ -1,4 +1,4 @@
-package com.abhi.parkspace.auth.dto.request;
+package com.abhi.parkspace.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ public record RegisterRequest(
         @Size(
                 min = 3,
                 max = 50,
-                message = "Full name must be between 3 and 50 characters"
+                message = "Full name length must be 3 - 50 characters"
         )
         String fullName,
 

@@ -1,14 +1,13 @@
 package com.abhi.parkspace.vehicle.controller;
 
 import com.abhi.parkspace.auth.entity.User;
-import com.abhi.parkspace.vehicle.dto.request.VehicleRequest;
-import com.abhi.parkspace.vehicle.dto.response.VehicleResponse;
+import com.abhi.parkspace.vehicle.dto.VehicleRequest;
+import com.abhi.parkspace.vehicle.dto.VehicleResponse;
 import com.abhi.parkspace.vehicle.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,16 +17,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/vehicles")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 public class VehicleController {
 
     private final VehicleService vehicleService;
-
-    /*
-     =========================================
-              CREATE VEHICLE
-     =========================================
-     */
 
     @PostMapping
     public ResponseEntity<VehicleResponse> createVehicle(
@@ -49,11 +41,6 @@ public class VehicleController {
                 .body(response);
     }
 
-    /*
-     =========================================
-              GET ALL USER VEHICLES
-     =========================================
-     */
 
     @GetMapping
     public ResponseEntity<List<VehicleResponse>> getUserVehicles(
@@ -68,11 +55,6 @@ public class VehicleController {
         );
     }
 
-    /*
-     =========================================
-              GET VEHICLE BY ID
-     =========================================
-     */
 
     @GetMapping("/{vehicleId}")
     public ResponseEntity<VehicleResponse> getVehicleById(
@@ -91,11 +73,6 @@ public class VehicleController {
         );
     }
 
-    /*
-     =========================================
-              UPDATE VEHICLE
-     =========================================
-     */
 
     @PutMapping("/{vehicleId}")
     public ResponseEntity<VehicleResponse> updateVehicle(
@@ -116,11 +93,6 @@ public class VehicleController {
         );
     }
 
-    /*
-     =========================================
-              DELETE VEHICLE
-     =========================================
-     */
 
     @DeleteMapping("/{vehicleId}")
     public ResponseEntity<String> deleteVehicle(
