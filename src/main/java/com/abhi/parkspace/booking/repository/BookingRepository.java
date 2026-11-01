@@ -14,4 +14,6 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     Optional<Booking> findByVehicleIdAndStatus(UUID vehicleId, BookingStatus status);
 
     List<Booking> findByVehicleOwner(User owner);
+
+
 }

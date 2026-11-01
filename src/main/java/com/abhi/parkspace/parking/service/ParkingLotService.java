@@ -11,7 +11,9 @@ public interface ParkingLotService {
 
     ParkingLotResponse create(ParkingLotRequest request, User admin);
 
-    List<ParkingLotResponse> getAll();
+     List<ParkingLotResponse> searchLots(String location);
+
+     List<ParkingLotResponse> getAll();
 
     ParkingLotResponse getById(UUID lotId);
 

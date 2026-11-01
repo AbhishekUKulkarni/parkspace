@@ -4,6 +4,8 @@ import com.abhi.parkspace.parking.dto.ParkingSpotRequest;
 import com.abhi.parkspace.parking.dto.ParkingSpotResponse;
 import com.abhi.parkspace.parking.entity.ParkingLot;
 import com.abhi.parkspace.parking.entity.ParkingSpot;
+import com.abhi.parkspace.parking.exception.ParkingLotNotFoundException;
+import com.abhi.parkspace.parking.exception.ParkingSpotNotFoundException;
 import com.abhi.parkspace.parking.repository.ParkingLotRepository;
 import com.abhi.parkspace.parking.repository.ParkingSpotRepository;
 import com.abhi.parkspace.parking.service.ParkingSpotService;
@@ -24,7 +26,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     public ParkingSpotResponse create(UUID lotId, ParkingSpotRequest request) {
 
         ParkingLot lot = lotRepo.findById(lotId)
-                .orElseThrow(() -> new RuntimeException("Lot not found"));
+                .orElseThrow(() -> new ParkingLotNotFoundException("Lot not found"));
 
         ParkingSpot spot = ParkingSpot.builder()
                 .spotNumber(request.spotNumber())
@@ -48,7 +50,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     public ParkingSpotResponse update(UUID spotId, ParkingSpotRequest request) {
 
         ParkingSpot spot = spotRepo.findById(spotId)
-                .orElseThrow(() -> new RuntimeException("Spot not found"));
+                .orElseThrow(() -> new ParkingSpotNotFoundException("Spot not found"));
 
         spot.setSpotNumber(request.spotNumber());
         spot.setStatus(request.status());

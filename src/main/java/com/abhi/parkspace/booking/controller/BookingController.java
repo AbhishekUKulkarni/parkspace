@@ -24,7 +24,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingResponse> createBooking(
-            @Valid @RequestBody BookingRequest request,
+            @RequestBody BookingRequest request,
             Authentication authentication
     ) {
         User user = (User) authentication.getPrincipal();
@@ -42,7 +42,7 @@ public class BookingController {
 
         bookingService.endBooking(bookingId, user);
 
-        return ResponseEntity.ok("Booking ended");
+        return ResponseEntity.ok("Booking ended, Thank You");
     }
 
     @GetMapping("/active")

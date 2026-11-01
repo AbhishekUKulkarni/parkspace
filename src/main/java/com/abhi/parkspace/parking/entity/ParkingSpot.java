@@ -31,9 +31,6 @@ public class ParkingSpot {
     @JoinColumn(name = "parking_lot_id", nullable = false)
     private ParkingLot parkingLot;
 
-   /* @Version
-    private Long version;*/
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

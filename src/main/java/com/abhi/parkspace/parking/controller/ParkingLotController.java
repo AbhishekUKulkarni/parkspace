@@ -42,7 +42,12 @@ public class ParkingLotController {
         User user = (User) auth.getPrincipal();
         return service.getMyLots(user);
     }
-
+    @GetMapping("/search")
+    public List<ParkingLotResponse> search(
+            @RequestParam String location
+    ) {
+        return service.searchLots(location);
+    }
     @PutMapping("/{lotId}")
     public ParkingLotResponse update(
             @PathVariable UUID lotId,

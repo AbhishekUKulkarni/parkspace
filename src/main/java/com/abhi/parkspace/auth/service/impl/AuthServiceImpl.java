@@ -16,7 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.abhi.parkspace.auth.entity.RevokedToken;
+import com.abhi.parkspace.auth.repository.RevokedTokenRepository;
 
+import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -30,8 +33,9 @@ public class AuthServiceImpl
 
     private final JwtService jwtService;
 
-    private final AuthenticationManager
-            authenticationManager;
+    private final AuthenticationManager  authenticationManager;
+
+    private final RevokedTokenRepository revokedTokenRepository;
 
     @Override
     public AuthResponse register(
@@ -128,5 +132,25 @@ public class AuthServiceImpl
                 token,
                 user.getEmail()
         );
+    }
+
+    @Override
+    public void logout(String token) {
+
+        if (revokedTokenRepository.existsByToken(token)) {
+            return;
+        }
+
+        Instant expiration = jwtService.extractExpiration(token).toInstant();
+
+        if (expiration.isBefore(Instant.now())) {
+            return;
+        }
+
+        revokedTokenRepository.save(
+                new RevokedToken(token, expiration)
+        );
+
+        log.info("User logged out successfully");
     }
 }
